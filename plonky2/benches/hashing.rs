@@ -6,6 +6,7 @@ use plonky2::field::types::Sample;
 use plonky2::hash::hash_types::{BytesHash, RichField};
 use plonky2::hash::keccak::KeccakHash;
 use plonky2::hash::poseidon::{Poseidon, SPONGE_WIDTH};
+use plonky2::hash::poseidon2::Poseidon2;
 use plonky2::plonk::config::Hasher;
 use tynm::type_name;
 
@@ -32,8 +33,26 @@ pub(crate) fn bench_poseidon<F: Poseidon>(c: &mut Criterion) {
     );
 }
 
+pub(crate) fn bench_poseidon2<F: Poseidon2>(c: &mut Criterion) {
+    const SPONGE_WIDTH_2: usize = 12;
+    c.bench_function(
+        &format!("poseidon2<{}, {SPONGE_WIDTH_2}>", type_name::<F>()),
+        |b| {
+            b.iter_batched(
+                || F::rand_array::<SPONGE_WIDTH_2>(),
+                |mut state| {
+                    F::poseidon2(&mut state);
+                    state
+                },
+                BatchSize::SmallInput,
+            )
+        },
+    );
+}
+
 fn criterion_benchmark(c: &mut Criterion) {
     bench_poseidon::<GoldilocksField>(c);
+    bench_poseidon2::<GoldilocksField>(c);
     bench_keccak::<GoldilocksField>(c);
 }
 
