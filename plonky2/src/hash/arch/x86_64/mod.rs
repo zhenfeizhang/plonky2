@@ -6,4 +6,6 @@
 #[cfg(target_feature = "avx2")]
 pub mod goldilocks_avx2;
 #[cfg(target_feature = "avx2")]
+pub mod poseidon_goldilocks_avx2;
+#[cfg(target_feature = "avx2")]
 pub mod poseidon2_goldilocks_avx2;
