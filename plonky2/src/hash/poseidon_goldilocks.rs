@@ -218,6 +218,7 @@ impl Poseidon for GoldilocksField {
     #[inline(always)]
     #[unroll::unroll_for_loops]
     fn mds_layer(state: &[Self; 12]) -> [Self; 12] {
+        // println!("poseidon 1 use nothing");
         let mut result = [GoldilocksField::ZERO; 12];
 
         // Using the linearity of the operations we can split the state into a low||high decomposition
